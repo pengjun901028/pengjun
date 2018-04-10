@@ -1,0 +1,16 @@
+---
+# Spring Cloud配置
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+eureka:
+  instance:
+    prefer-ip-address: true
+    metadataMap:
+      instanceId: ${spring.application.name}:${random.value}
+  client:
+    serviceUrl:
+      defaultZone: http://10.0.20.123:11006/eureka/

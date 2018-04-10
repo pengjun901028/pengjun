@@ -1,0 +1,17 @@
+# email
+email:
+  host: "smtp.qiye.163.com"
+  port: 25
+  username: dev@bestjiupai.com
+  userpass: 123456
+# mongdb
+spring:
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/local
+hikari:
+  serverName: 127.0.0.1
+  port: 3306
+  databaseName: coin168
+  user: root
+  password: root

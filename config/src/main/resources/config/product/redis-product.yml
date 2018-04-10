@@ -1,0 +1,10 @@
+---
+redis:
+  pool:
+    minIdle: 100
+    maxIdle: 100
+    maxTotal: 300
+    testOnBorrow: true
+  node:
+    host: localhost
+    port: 6379

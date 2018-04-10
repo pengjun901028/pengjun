@@ -1,0 +1,6 @@
+---
+email:
+  host: "smtp.qiye.163.com"
+  port: 25
+  username: dev@bestjiupai.com
+  userpass: 123456

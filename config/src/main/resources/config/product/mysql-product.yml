@@ -1,0 +1,8 @@
+---
+# DataBase配置
+hikari:
+  serverName: 10.0.20.108
+  port: 3306
+  databaseName: coin168
+  user: root
+  password:

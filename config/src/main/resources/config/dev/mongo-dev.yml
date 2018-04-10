@@ -1,0 +1,6 @@
+---
+# DataBase配置
+spring:
+  data:
+    mongodb:
+      uri: mongodb://150.150.187.25:27017/coin168
