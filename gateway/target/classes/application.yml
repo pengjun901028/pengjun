@@ -1,0 +1,13 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8081/eureka/
+server:
+  port: 8084
+zuul:
+  routes:
+    trade: /trade/**
+    user: /user/**
+spring:
+  application:
+    name: gateway

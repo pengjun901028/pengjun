@@ -1,0 +1,224 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mser.mysql.dao.IUserDao">
+
+    <sql id="userFileds">
+        id,
+        mobile,
+        email,
+        login_pass,
+        pay_pass,
+        bind_coinency_id,
+        kyc,
+        `type`,
+        last_login_ip,
+        last_login_time,
+        `status`,
+        reference_id,
+        create_time,
+        update_time,
+        salt
+    </sql>
+
+    <sql id="userFiledInfo">
+        userId,
+        firstName,
+        lastName,
+        bankCode,
+        idCard,
+        mobile,
+        address,
+        passportCard,
+        passportImageB,
+        addressImage
+    </sql>
+    <select id="getUser" resultType="com.mser.mysql.dao.entity.User">
+        SELECT
+        <include refid="userFileds"/>
+        FROM user WHERE 1=1
+        <if test="email!=null and email!=''">
+            and email = #{email}
+        </if>
+        <if test="login_pass!=null and login_pass!=''">
+            and login_pass = #{login_pass}
+        </if>
+        <if test="id!=null and id!=''">
+            and id = #{id}
+        </if>
+    </select>
+
+    <insert id="addUser" parameterType="com.mser.mysql.dao.entity.User" useGeneratedKeys="true" keyColumn="id">
+        insert into coin168.user(name,password) values(#{name}, #{password})
+    </insert>
+
+
+    <update id="updateUser" parameterType="com.mser.mysql.dao.entity.User">
+        update coin168.user
+        <set>
+            <if test="user.login_pass != null">
+                login_pass = #{user.login_pass},
+            </if>
+            <if test="user.bind_coinency_id != null">
+                bind_coinency_id = #{user.bind_coinency_id},
+            </if>
+            <if test="user.pay_pass != null">
+                pay_pass = #{user.pay_pass},
+            </if>
+            <if test="user.kyc">
+                kyc = #{user.kyc},
+            </if>
+            <if test="user.last_login_ip != null">
+                last_login_ip = #{user.last_login_ip},
+            </if>
+            <if test="user.type != null">
+                type = #{user.type},
+            </if>
+            <if test="user.last_login_time != null">
+                last_login_time = now(),
+            </if>
+            <if test="user.status != null">
+                `status` = #{user.status},
+            </if>
+            <if test="user.salt != null">
+                salt = #{user.salt},
+            </if>
+            <if test="user.update_time != null">
+                update_time = now()
+            </if>
+        </set>
+        where id = #{user.id}
+    </update>
+
+
+    <select id="find" resultType="com.mser.mysql.dao.entity.Users">
+        SELECT t.id,t.email email,t.bind_coinency_id coninId,t.kyc t,t.type type,t.last_login_ip
+        lastLoginIp,t.last_login_time lastLoginTime,t.reference_id referenceId,
+        t.status status,t.create_time createTime,i.firstName firstName,i.lastName as lastName,i.mobile
+        mobile FROM user t left join user_info i on t.id=i.userId WHERE 1=1
+        <if test="id!=null">
+            and t.id=#{id}
+        </if>
+        <if test="coinId!=null and coinId==0">
+            and t.bind_coinency_id is null
+        </if>
+        <if test="coinId!=null and coinId!=0">
+            and t.bind_coinency_id=  #{coinId}
+        </if>
+        <if test="email!=null and email!=''">
+            AND i.email LIKE '%' #{email} '%'
+        </if>
+        <if test="mobile!=null and mobile!=''">
+            AND i.mobile LIKE '%' #{mobile} '%'
+        </if>
+        <if test="firstName!=null and firstName!=''">
+            AND i.firstName LIKE '%' #{firstName} '%'
+        </if>
+        <if test="lastName!=null and lastName!=''">
+            AND i.lastName LIKE '%' #{lastName} '%'
+        </if>
+        <if test="offset !=null and limit!=null">
+            limit #{offset},#{limit}
+        </if>
+    </select>
+
+    <select id="count" parameterType="com.mser.mysql.dao.entity.User" resultType="java.lang.Integer">
+        SELECT count(t.id) FROM user t left join user_info i on t.id=i.userId WHERE 1=1
+        <if test="id!=null">
+            and t.id=#{id}
+        </if>
+        <if test="coinId!=null and coinId==0">
+            and t.bind_coinency_id is null
+        </if>
+        <if test="coinId!=null and coinId!=0">
+            and t.bind_coinency_id=  #{coinId}
+        </if>
+        <if test="email!=null and email!=''">
+            AND i.email LIKE '%' #{email} '%'
+        </if>
+        <if test="mobile!=null and mobile!=''">
+            AND i.mobile LIKE '%' #{mobile} '%'
+        </if>
+        <if test="firstName!=null and firstName!=''">
+            AND i.firstName LIKE '%' #{firstName} '%'
+        </if>
+        <if test="lastName!=null and lastName!=''">
+            AND i.lastName LIKE '%' #{lastName} '%'
+        </if>
+    </select>
+
+
+    <!--  用户附属信息 -->
+    <insert id="addUserInfo" useGeneratedKeys="true" keyColumn="id">
+        insert into coin168.user(name,password) VALUE (#{name},#{password})
+    </insert>
+    <!-- 更新附属信息 -->
+    <update id="updateUserInfo" parameterType="com.mser.mysql.dao.entity.UserInfo">
+        UPDATE user_info
+        <set>
+            <if test="userInfo.country != null">
+                country = #{userInfo.country},
+            </if>
+            <if test="userInfo.countryCode != null">
+                countryCode = #{userInfo.countryCode},
+            </if>
+            <if test="userInfo.firstName != null">
+                firstName = #{userInfo.firstName},
+            </if>
+            <if test="userInfo.lastName != null">
+                lastName = #{userInfo.lastName},
+            </if>
+            <if test="userInfo.bankCode != null">
+                bankCode = #{userInfo.bankCode},
+            </if>
+            <if test="userInfo.bankCodeImgA != null">
+                bankCodeImgA = #{userInfo.bankCodeImgA},
+            </if>
+            <if test="userInfo.bankCodeImgB != null">
+                bankCodeImgB = #{userInfo.bankCodeImgB},
+            </if>
+            <if test="userInfo.idCard != null">
+                idCard = #{userInfo.idCard},
+            </if>
+            <if test="userInfo.idCardImgA != null">
+                idCardImgA = #{userInfo.idCardImgA},
+            </if>
+            <if test="userInfo.idCardImgB != null">
+                idCardImgB = #{userInfo.idCardImgB},
+            </if>
+            <if test="userInfo.bankAddress != null">
+                bankAddress = #{userInfo.bankAddress},
+            </if>
+            <if test="userInfo.birthday != null">
+                birthday = #{userInfo.birthday},
+            </if>
+            <if test="userInfo.mobile != null">
+                mobile = #{userInfo.mobile},
+            </if>
+            <if test="userInfo.address != null">
+                address = #{userInfo.address},
+            </if>
+            <if test="userInfo.passportCard != null">
+                passportCard = #{userInfo.passportCard},
+            </if>
+            <if test="userInfo.passportImageA != null">
+                passportImageA = #{userInfo.passportImageA},
+            </if>
+            <if test="userInfo.passportImageB != null">
+                passportImageB = #{userInfo.passportImageB},
+            </if>
+            <if test="userInfo.addressImage != null">
+                addressImage = #{userInfo.addressImage},
+            </if>
+        </set>
+        where userId = #{userInfo.userId}
+    </update>
+
+    <select id="getUserInfo" resultType="com.mser.mysql.dao.entity.UserInfo">
+        SELECT
+        <include refid="userFiledInfo"/>
+        FROM user_info WHERE userId = #{userId}
+    </select>
+
+
+</mapper>
